@@ -1,4 +1,4 @@
-from chirps.models import Chirp
+from chirps.models import Chirp, Tag
 from django.contrib import admin
 
 
@@ -22,3 +22,6 @@ class ChirpAdmin(admin.ModelAdmin):
         })
     )
 
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('name', 'created_at')
