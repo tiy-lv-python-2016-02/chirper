@@ -24,7 +24,7 @@ class Chirp(models.Model):
 
     @property
     def tag_count(self):
-        return self.tag_set.filter(user__username="kevin").count()
+        return self.tag_set.count()
 
 
 class Tag(models.Model):
