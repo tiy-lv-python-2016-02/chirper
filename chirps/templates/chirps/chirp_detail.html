@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chirp Detail</title>
+</head>
+<body>
+    <h1>Chirp Detail</h1>
+    {% if user.is_authenticated %}
+    Hello, {{ user.username }}
+    {% endif %}
+    <ul>
+        <li><strong>Subject:</strong>{{ chirp.subject }}</li>
+        <li><strong>Message</strong>{{ chirp.message }}</li>
+        <li><strong>Author:</strong>{{ chirp.user }}</li>
+        <li><strong>Created At:</strong>{{ chirp.created_at }}</li>
+    </ul>
+
+    Time Run: {{ time_run }}
+</body>
+</html>

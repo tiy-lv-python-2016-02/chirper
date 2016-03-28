@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <h1>Chirps</h1>
+
+        {% if chirps %}
+        <ul>
+            {% for chirp in chirps %}
+            <li><a href="{% url 'chirp_detail' chirp.id %}">{{ chirp.subject }}</a> by {{ chirp.user }} at {{ chirp.created_at }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <h2>No chirps found</h2>
+        {% endif %}
+    </body>
+</html>
