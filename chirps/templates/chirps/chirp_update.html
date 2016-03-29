@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Chirp</title>
+</head>
+<body>
+    <h1>Update Chirp</h1>
+    <form method="post" action="{% url "chirp_update" chirp.id %}">
+        {% csrf_token %}
+        {{ form.as_ul }}
+        <input type="submit" name="submit" value="Chirp!">
+    </form>
+</body>
+</html>

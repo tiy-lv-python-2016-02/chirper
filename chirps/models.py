@@ -13,7 +13,6 @@ class Chirp(models.Model):
                                       verbose_name="Created")
     modified_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User)
-    #email = models.EmailField(max_length=50, validators=...)
 
 
     def is_recent(self):
