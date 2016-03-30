@@ -15,10 +15,15 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.contrib.auth.views import logout
+from django.core.urlresolvers import reverse_lazy
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^chirps/', include("chirps.urls")),
+    url(r'^logout/$', logout, {'next_page':reverse_lazy('chirp_list')},
+        name='logout'),
+    url('^', include('django.contrib.auth.urls'))
 
 
 ]

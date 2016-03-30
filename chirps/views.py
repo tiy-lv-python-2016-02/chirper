@@ -1,105 +1,48 @@
 from chirps.forms import ChirpForm
 from chirps.models import Chirp
-from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, render_to_response, get_object_or_404, \
     redirect
 from django.template import loader, Context
 from django.utils import timezone
-from django.views.generic import View
+from django.views.generic import UpdateView, ListView, DetailView, CreateView
 
 
-class ChirpList(View):
-
-    def get(self, request):
-        chirps = Chirp.objects.all().order_by("-created_at")
-
-        return render(request, "chirps/chirp_list.html", {"chirps": chirps})
-
-class ChirpDetail(View):
-
-    def get(self, request, id):
-        chirp = get_object_or_404(Chirp, pk=id)
-
-        time_run = timezone.now()
-
-        return render(request, "chirps/chirp_detail.html", {"chirp": chirp,
-                                                        "time_run": time_run})
-
-class ChirpCreate(View):
-
-    def get(self, request):
-        form = ChirpForm()
-
-        return render(request, "chirps/chirp_create.html", {"form": form})
-
-    def post(self, request):
-        form = ChirpForm(request.POST)
-
-        if form.is_valid():
-            chirp = form.save(commit=False)
-            chirp.user = request.user
-            chirp.save()
-
-            return redirect(reverse("chirp_list"))
-        return render(request, "chirps/chirp_create.html", {"form": form})
-
-def chirp_create(request):
-
-    if request.method == "POST":
-        form = ChirpForm(request.POST)
-
-        if form.is_valid():
-            chirp = form.save(commit=False)
-            chirp.user = request.user
-            chirp.save()
-
-            return redirect(reverse("chirp_list"))
-    else:
-        form = ChirpForm()
-
-    return render(request, "chirps/chirp_create.html", {"form": form})
+class ChirpList(ListView):
+    model = Chirp
+    queryset = Chirp.objects.order_by("-created_at")
+    paginate_by = 50
 
 
-def chirp_update(request, id):
+class ChirpDetail(DetailView):
+    model = Chirp
+    pk_url_kwarg = 'id'
 
-    chirp = get_object_or_404(Chirp, pk=id)
-
-    if request.method == "POST":
-        form = ChirpForm(data=request.POST, instance=chirp)
-
-        if form.is_valid():
-            chirp = form.save(commit=False)
-            chirp.user = request.user
-            chirp.save()
-
-            return redirect(reverse("chirp_list"))
-    else:
-        form = ChirpForm(instance=chirp)
-
-    return render(request, "chirps/chirp_update.html", {"form": form, "chirp": chirp})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["time_run"] = timezone.now()
+        return context
 
 
-class ChirpUpdate(View):
+class ChirpCreate(LoginRequiredMixin, CreateView):
+    model = Chirp
+    form_class = ChirpForm
+    success_url = reverse_lazy("chirp_list")
+    template_name_suffix = "_create"
+    # template_name = "chirps/chirp_create.html"
 
-    def get(self, request, id):
-        chirp = get_object_or_404(Chirp, pk=id)
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
-        form = ChirpForm(instance=chirp)
 
-        return render(request, "chirps/chirp_update.html",
-                      {"form": form, "chirp": chirp})
+class ChirpUpdate(LoginRequiredMixin, UpdateView):
+    model = Chirp
+    form_class = ChirpForm
+    template_name = "chirps/chirp_update.html"
 
-    def post(self, request, id):
-        chirp = get_object_or_404(Chirp, pk=id)
-
-        form = ChirpForm(data=request.POST, instance=chirp)
-
-        if form.is_valid():
-            chirp = form.save(commit=False)
-            chirp.user = request.user
-            chirp.save()
-
-            return redirect(reverse("chirp_list"))
-        return render(request, "chirps/chirp_update.html",
-                      {"form": form, "chirp": chirp})
+    def get_success_url(self):
+        return reverse("chirp_detail", args=(self.object.id,))

@@ -7,14 +7,25 @@
     <body>
         <h1>Chirps</h1>
 
-        {% if chirps %}
+        {% if chirp_list %}
         <ul>
-            {% for chirp in chirps %}
+            {% for chirp in chirp_list %}
             <li><a href="{% url 'chirp_detail' chirp.id %}">{{ chirp.subject }}</a> by {{ chirp.user }} at {{ chirp.created_at }}</li>
             {% endfor %}
         </ul>
         {% else %}
             <h2>No chirps found</h2>
+        {% endif %}
+
+        {% if is_paginated %}
+            {% if page_obj.has_previous %}
+                <a href="{% url "chirp_list" %}?page={{ page_obj.previous_page_number }}"><--Prev</a>
+            {% endif %}
+            {{ page_obj }}
+            {% if page_obj.has_next %}
+                <a href="{% url "chirp_list" %}?page={{ page_obj.next_page_number }}">Next--></a>
+            {% endif %}
+
         {% endif %}
     </body>
 </html>
