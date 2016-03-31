@@ -1,31 +1,23 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Title</title>
-    </head>
-    <body>
+{% extends "chirps/chirp_base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Chirper - Chirp List{% endblock %}
+
+{% block content %}
         <h1>Chirps</h1>
 
         {% if chirp_list %}
-        <ul>
+        <div class="list-group">
             {% for chirp in chirp_list %}
-            <li><a href="{% url 'chirp_detail' chirp.id %}">{{ chirp.subject }}</a> by {{ chirp.user }} at {{ chirp.created_at }}</li>
+                <a href="{% url 'chirp_detail' chirp.id %}" class="list-group-item">
+                <h4 class="list-group-item-heading">{{ chirp.subject }}</h4>
+                <p class="list-group-item-text">By {{ chirp.user }} at {{ chirp.created_at }}</p>
+                </a>
             {% endfor %}
-        </ul>
+        </div>
         {% else %}
             <h2>No chirps found</h2>
         {% endif %}
 
-        {% if is_paginated %}
-            {% if page_obj.has_previous %}
-                <a href="{% url "chirp_list" %}?page={{ page_obj.previous_page_number }}"><--Prev</a>
-            {% endif %}
-            {{ page_obj }}
-            {% if page_obj.has_next %}
-                <a href="{% url "chirp_list" %}?page={{ page_obj.next_page_number }}">Next--></a>
-            {% endif %}
-
-        {% endif %}
-    </body>
-</html>
+        {% bootstrap_pagination page_obj %}
+{% endblock %}

@@ -1,0 +1,16 @@
+h1 {
+    font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
+    font-weight: bold;
+}
+
+.red {
+    color: red;
+}
+
+.underlined {
+    text-decoration: underline;
+}
+
+#myhello {
+    padding: 30px;
+}

@@ -1,21 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Chirp Detail</title>
-</head>
-<body>
+{% extends "chirps/chirp_base.html" %}
+
+{% block title %}Chirper - {{ chirp.subject }}{% endblock %}
+
+{% block content %}
     <h1>Chirp Detail</h1>
     {% if user.is_authenticated %}
-    Hello, {{ user.username }}
+        Hello, {{ user.username }}
     {% endif %}
-    <ul>
-        <li><strong>Subject:</strong>{{ chirp.subject }}</li>
-        <li><strong>Message</strong>{{ chirp.message }}</li>
-        <li><strong>Author:</strong>{{ chirp.user }}</li>
-        <li><strong>Created At:</strong>{{ chirp.created_at }}</li>
-    </ul>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">{{ chirp.subject }}</div>
+        <div class="panel-body">
+            {{ chirp.message }} <p><small>-by {{ chirp.user }}</small></p>
+        </div>
+        <div class="panel-footer">{{ chirp.created_at }}</div>
+    </div>
 
     Time Run: {{ time_run }}
-</body>
-</html>
+{% endblock %}

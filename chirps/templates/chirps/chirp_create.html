@@ -1,15 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Chirp</title>
-</head>
-<body>
+{% extends "chirps/chirp_base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
     <h1>Create Chirp</h1>
-    <form method="post" action="{% url "chirp_create" %}">
+    <form method="post" action="{% url "chirp_create" %}" class="form">
         {% csrf_token %}
-        {{ form.as_ul }}
-        <input type="submit" name="submit" value="Chirp!">
+        {% bootstrap_form form %}
+        {% buttons submit="Chirp!" %}{% endbuttons %}
     </form>
-</body>
-</html>
+{% endblock %}

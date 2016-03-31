@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Log In to Chirper</title>
-</head>
-<body>
+{% extends "chirps/chirp_base.html" %}
+
+{% block title %}Log In TO Chirper{% endblock %}
+
+{% block content %}
     <h1>Log In To Chirper</h1>
     <form action="{% url 'login' %}" method="post">
         {% csrf_token %}
@@ -12,5 +10,4 @@
         {{ form.as_p }}
         <input type="submit" name="submit" value="Log In!">
     </form>
-</body>
-</html>
+{% endblock %}

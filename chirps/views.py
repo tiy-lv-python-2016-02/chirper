@@ -14,7 +14,7 @@ from django.views.generic import UpdateView, ListView, DetailView, CreateView
 class ChirpList(ListView):
     model = Chirp
     queryset = Chirp.objects.order_by("-created_at")
-    paginate_by = 50
+    paginate_by = 5
 
 
 class ChirpDetail(DetailView):

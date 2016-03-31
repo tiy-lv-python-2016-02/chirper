@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from chirps.views import ChirpList
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth.views import logout
@@ -23,6 +24,7 @@ urlpatterns = [
     url(r'^chirps/', include("chirps.urls")),
     url(r'^logout/$', logout, {'next_page':reverse_lazy('chirp_list')},
         name='logout'),
+    url(r"^$", ChirpList.as_view()),
     url('^', include('django.contrib.auth.urls'))
 
 
