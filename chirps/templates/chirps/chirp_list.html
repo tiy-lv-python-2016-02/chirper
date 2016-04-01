@@ -1,10 +1,15 @@
-{% extends "chirps/chirp_base.html" %}
+{% extends "base.html" %}
 {% load bootstrap3 %}
 
 {% block title %}Chirper - Chirp List{% endblock %}
 
 {% block content %}
         <h1>Chirps</h1>
+        {% if user.is_authenticated %}
+            <h4>Welcome, {{ user.username }}!</h4>
+        {% else %}
+            <h4>Welcome, Guest!</h4>
+        {% endif %}
 
         {% if chirp_list %}
         <div class="list-group">

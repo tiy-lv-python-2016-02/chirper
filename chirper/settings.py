@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'bootstrap3',
     'chirps',
+    'users',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -61,7 +62,7 @@ ROOT_URLCONF = 'chirper.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ["global"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

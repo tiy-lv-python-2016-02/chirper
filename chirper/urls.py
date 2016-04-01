@@ -18,12 +18,14 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth.views import logout
 from django.core.urlresolvers import reverse_lazy
+from users.views import RegisterUser
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^chirps/', include("chirps.urls")),
     url(r'^logout/$', logout, {'next_page':reverse_lazy('chirp_list')},
         name='logout'),
+    url(r"^register/$", RegisterUser.as_view(), name="register"),
     url(r"^$", ChirpList.as_view()),
     url('^', include('django.contrib.auth.urls'))
 
