@@ -16,5 +16,10 @@
         <div class="panel-footer">{{ chirp.created_at }}</div>
     </div>
 
+    <div>
+        <img src="{{ chirp.image.url }}" height="{{ chirp.image.height }}" width="{{ chirp.image.width }}">
+    </div>
+
     Time Run: {{ time_run }}
+
 {% endblock %}

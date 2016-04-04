@@ -1,12 +1,7 @@
 from chirps.forms import ChirpForm
 from chirps.models import Chirp
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.http import HttpResponse, Http404
-from django.shortcuts import render, render_to_response, get_object_or_404, \
-    redirect
-from django.template import loader, Context
 from django.utils import timezone
 from django.views.generic import UpdateView, ListView, DetailView, CreateView
 
@@ -23,6 +18,12 @@ class ChirpDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        author_list = self.request.session.get("author_list", {})
+        author_list[self.object.user.username] = \
+            author_list.get(self.object.user.username, 0) + 1
+        self.request.session['author_list'] = author_list
+
         context["time_run"] = timezone.now()
         return context
 

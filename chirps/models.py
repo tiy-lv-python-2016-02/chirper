@@ -13,6 +13,8 @@ class Chirp(models.Model):
                                       verbose_name="Created")
     modified_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User)
+    image = models.ImageField(upload_to="profile/", null=True, blank=True)
+    archived = models.BooleanField(default=False)
 
 
     def is_recent(self):

@@ -14,7 +14,7 @@ class ChirpAdmin(admin.ModelAdmin):
     # Much more complicated layouts
     fieldsets = (
         (None, {
-            "fields": ("subject", "message")
+            "fields": ("subject", "message", "image")
         }),
         ('Read Only Fields', {
             'classes': ("collapse", ),

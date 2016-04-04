@@ -24,5 +24,7 @@
             <h2>No chirps found</h2>
         {% endif %}
 
+        {{ request.session.author_list }}
+
         {% bootstrap_pagination page_obj %}
 {% endblock %}
