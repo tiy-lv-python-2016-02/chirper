@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'bootstrap3',
     'chirps',
-    'users',
 ]
 
 MIDDLEWARE_CLASSES = [

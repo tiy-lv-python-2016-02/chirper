@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1>Update Chirp</h1>
-    <form method="post" action="{% url "chirp_update" chirp.id %}">
+    <form method="post" action="{% url "chirp_detail" chirp.id %}">
         {% csrf_token %}
         {{ form.as_ul }}
         <input type="submit" name="submit" value="Chirp!">

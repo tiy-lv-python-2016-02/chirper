@@ -14,16 +14,14 @@ from django.views.generic import UpdateView, ListView, DetailView, CreateView
 class ChirpList(ListView):
     model = Chirp
     queryset = Chirp.objects.order_by("-created_at")
-    paginate_by = 5
+    paginate_by = 1
 
 
 class ChirpDetail(DetailView):
     model = Chirp
-    pk_url_kwarg = 'id'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["time_run"] = timezone.now()
         return context
 
 
@@ -32,7 +30,6 @@ class ChirpCreate(LoginRequiredMixin, CreateView):
     form_class = ChirpForm
     success_url = reverse_lazy("chirp_list")
     template_name_suffix = "_create"
-    # template_name = "chirps/chirp_create.html"
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -45,4 +42,4 @@ class ChirpUpdate(LoginRequiredMixin, UpdateView):
     template_name = "chirps/chirp_update.html"
 
     def get_success_url(self):
-        return reverse("chirp_detail", args=(self.object.id,))
+        return reverse("chirp_detail")

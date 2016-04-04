@@ -8,12 +8,12 @@ from django.utils import timezone
 class Chirp(models.Model):
 
     message = models.CharField(max_length=150)
-    subject = models.CharField(max_length=50, help_text="Short version as a title of longer chirp message")
+    subject = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True,
                                       verbose_name="Created")
     modified_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User)
-
+    archived = models.BooleanField(default=False)
 
     def is_recent(self):
         return timezone.now() - datetime.timedelta(days=1) <= self.created_at
