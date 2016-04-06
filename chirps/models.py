@@ -3,6 +3,7 @@ import datetime
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
 
 
 class Chirp(models.Model):
@@ -12,9 +13,10 @@ class Chirp(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True,
                                       verbose_name="Created")
     modified_at = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, related_name="chirps")
     image = models.ImageField(upload_to="profile/", null=True, blank=True)
     archived = models.BooleanField(default=False)
+    slug = models.SlugField(max_length=50, null=True, blank=True)
 
 
     def is_recent(self):
@@ -26,6 +28,12 @@ class Chirp(models.Model):
     @property
     def tag_count(self):
         return self.tag_set.count()
+
+    def save(self, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.subject)
+
+        super().save(**kwargs)
 
 
 class Tag(models.Model):

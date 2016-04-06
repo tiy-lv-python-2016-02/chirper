@@ -9,16 +9,16 @@ class ChirpAdmin(admin.ModelAdmin):
     list_display = ('id', 'subject', 'user', 'created_at', 'modified_at')
 
     # This will simply add the read only fields to page to be displayed
-    readonly_fields = ('user', 'created_at', 'modified_at')
+    readonly_fields = ('created_at', 'modified_at')
 
     # Much more complicated layouts
     fieldsets = (
         (None, {
-            "fields": ("subject", "message", "image")
+            "fields": ("subject", "message", "image", 'user')
         }),
         ('Read Only Fields', {
             'classes': ("collapse", ),
-            'fields': ('user', 'created_at', 'modified_at')
+            'fields': ('created_at', 'modified_at')
         })
     )
 

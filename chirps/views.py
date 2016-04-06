@@ -8,8 +8,16 @@ from django.views.generic import UpdateView, ListView, DetailView, CreateView
 
 class ChirpList(ListView):
     model = Chirp
-    queryset = Chirp.objects.order_by("-created_at")
     paginate_by = 5
+
+    def get_queryset(self):
+        qs = Chirp.objects.all()
+
+        if "user" in self.request.GET:
+            qs = qs.filter(user__username=self.request.GET["user"])
+
+        qs = qs.order_by("-created_at")
+        return qs
 
 
 class ChirpDetail(DetailView):
