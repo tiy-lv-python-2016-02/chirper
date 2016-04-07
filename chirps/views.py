@@ -1,3 +1,5 @@
+import logging
+
 from chirps.forms import ChirpForm
 from chirps.models import Chirp
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -5,6 +7,7 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import UpdateView, ListView, DetailView, CreateView
 
+logger = logging.getLogger(__name__)
 
 class ChirpList(ListView):
     model = Chirp
@@ -17,6 +20,7 @@ class ChirpList(ListView):
             qs = qs.filter(user__username=self.request.GET["user"])
 
         qs = qs.order_by("-created_at")
+        logger.debug("ChirpList returned {} chirps".format(qs.count()))
         return qs
 
 
