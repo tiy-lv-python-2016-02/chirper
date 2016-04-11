@@ -1,5 +1,6 @@
 import json
 
+from api.serializers import ChirpSerializer, UserSerializer
 from chirps.models import Chirp
 from django.contrib.auth.models import User
 from django.core import serializers
@@ -7,52 +8,75 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
+class DetailUser(APIView):
 
-@csrf_exempt
+    def get(self, request, pk):
+        try:
+            user = User.objects.get(pk=pk)
+        except Chirp.DoesNotExist as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+@api_view(["GET", "POST"])
 def list_create_chirp(request):
 
     if request.method == "GET":
         chirps = Chirp.objects.order_by("-created_at")
-        content = serializers.serialize("json", chirps)
-        return HttpResponse(content, content_type="application/json",
-                            status=200)
+        serializer = ChirpSerializer(chirps, many=True,
+                                     context={"request": request})
+
+        return Response(serializer.data)
 
     elif request.method == "POST":
         user = User.objects.first()
 
-        data = json.loads(request.body.decode("UTF-8"))
-        chirp = Chirp.objects.create(subject=data['subject'],
-                                     message=data['message'],
-                                     user=user)
-        content = serializers.serialize("json", [chirp])
-        return HttpResponse(content, content_type="application/json",)
+        serializer = ChirpSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    return HttpResponse("", status=405)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class DetailUpdateDeleteChirp(View):
 
-    def get(self, *args, **kwargs):
-        chirp = get_object_or_404(Chirp, pk=self.request.kwargs['chirp_id'])
+class DetailUpdateDeleteChirp(APIView):
 
-        content = serializers.serialize("json", [chirp])
-        return HttpResponse(content, status=200,
-                            content_type="application/json")
+    def get(self, request, pk):
+        try:
+            chirp = Chirp.objects.get(pk=pk)
+        except Chirp.DoesNotExist as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def put(self, *args, **kwargs):
-        chirp = get_object_or_404(Chirp, pk=self.request.kwargs['chirp_id'])
+        serializer = ChirpSerializer(chirp, context={"request": request})
+        return Response(serializer.data)
 
-        data = json.loads(self.request.body.decode("UTF-8"))
-        chirp.message = data.get("message", chirp.message)
-        chirp.subject = data.get("subject", chirp.subject)
-        chirp.save()
 
-        content = serializers.serialize("json", [chirp])
-        return HttpResponse(content, status=200,
-                            content_type="application/json")
+    def put(self, request, pk):
+        try:
+            chirp = Chirp.objects.get(pk=pk)
+        except Chirp.DoesNotExist as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def delete(self, *args, **kwargs):
-        chirp = get_object_or_404(Chirp, pk=self.request.kwargs['chirp_id'])
+        serializer = ChirpSerializer(chirp, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def delete(self, request, pk):
+        try:
+            chirp = Chirp.objects.get(pk=pk)
+        except Chirp.DoesNotExist as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
         chirp.delete()
 
-        return HttpResponse([], status=204)
+        return Response(status=status.HTTP_204_NO_CONTENT)
