@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^chirps/', include("chirps.urls")),
     url(r'^logout/$', logout, {'next_page':reverse_lazy('chirp_list')},
         name='logout'),
+    url(r"^api/", include('api.urls')),
     url(r"^register/$", RegisterUser.as_view(), name="register"),
     url(r"^$", ChirpList.as_view()),
     url('^', include('django.contrib.auth.urls'))

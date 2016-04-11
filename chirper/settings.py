@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'chirps',
     'users',
+    'api',
 ]
 
 MIDDLEWARE_CLASSES = [
