@@ -1,82 +1,45 @@
-import json
-
+from api.permissions import IsOwnerOrReadOnly
 from api.serializers import ChirpSerializer, UserSerializer
 from chirps.models import Chirp
 from django.contrib.auth.models import User
-from django.core import serializers
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import View
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-class DetailUser(APIView):
-
-    def get(self, request, pk):
-        try:
-            user = User.objects.get(pk=pk)
-        except Chirp.DoesNotExist as e:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
-
-@api_view(["GET", "POST"])
-def list_create_chirp(request):
-
-    if request.method == "GET":
-        chirps = Chirp.objects.order_by("-created_at")
-        serializer = ChirpSerializer(chirps, many=True,
-                                     context={"request": request})
-
-        return Response(serializer.data)
-
-    elif request.method == "POST":
-        user = User.objects.first()
-
-        serializer = ChirpSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from rest_framework import generics
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
-class DetailUpdateDeleteChirp(APIView):
+class TenResultsPaginator(PageNumberPagination):
+    page_size = 10
 
-    def get(self, request, pk):
-        try:
-            chirp = Chirp.objects.get(pk=pk)
-        except Chirp.DoesNotExist as e:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        serializer = ChirpSerializer(chirp, context={"request": request})
-        return Response(serializer.data)
+class DetailUser(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
-    def put(self, request, pk):
-        try:
-            chirp = Chirp.objects.get(pk=pk)
-        except Chirp.DoesNotExist as e:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+class ListCreateChirp(generics.ListCreateAPIView):
+    queryset = Chirp.objects.order_by("-created_at")
+    serializer_class = ChirpSerializer
+    pagination_class = TenResultsPaginator
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
-        serializer = ChirpSerializer(chirp, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+    def perform_create(self, serializer):
+        serializer.save(user = self.request.user)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        params = self.request.query_params
+        if "search" in params:
+            qs = qs.filter(subject__contains=params["search"])
+
+        return qs
 
 
-    def delete(self, request, pk):
-        try:
-            chirp = Chirp.objects.get(pk=pk)
-        except Chirp.DoesNotExist as e:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+class DetailUpdateDeleteChirp(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Chirp.objects.filter(archived=False)
+    serializer_class = ChirpSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
 
-        chirp.delete()
+    def perform_destroy(self, instance):
+        instance.archived = True
+        instance.save()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)

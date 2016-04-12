@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'bootstrap3',
     'rest_framework',
+    'rest_framework.authtoken',
     'chirps',
     'users',
     'api',
@@ -57,6 +58,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'chirps.middlewares.DisneyMiddleware',
 ]
 
 ROOT_URLCONF = 'chirper.urls'
@@ -176,4 +178,13 @@ LOGGING = {
             'propagate': True
         }
     }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    )
 }
