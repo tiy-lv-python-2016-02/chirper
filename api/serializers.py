@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
-    chirps = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    chirps = serializers.StringRelatedField(read_only=True, many=True)
 
     class Meta:
         model = User

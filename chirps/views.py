@@ -1,11 +1,13 @@
 import logging
 
+import stripe
 from chirps.forms import ChirpForm
 from chirps.models import Chirp
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.http import HttpResponseRedirect
 from django.utils import timezone
-from django.views.generic import UpdateView, ListView, DetailView, CreateView
+from django.views.generic import UpdateView, ListView, DetailView, CreateView, View
 
 logger = logging.getLogger(__name__)
 
@@ -59,3 +61,21 @@ class ChirpUpdate(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse("chirp_detail", args=(self.object.id,))
+
+
+def chirp_donate(self, request):
+    token = request.POST["stripeToken"]
+
+    stripe.api_key = "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
+    try:
+        charge = stripe.Charge.create(
+            amount=1000,  # amount in cents, again
+            currency="usd",
+            source=token,
+            description="Example charge"
+        )
+    except stripe.error.CardError as e:
+        # The card has been declined
+        pass
+
+    return HttpResponseRedirect(reverse('chirp_list'))
