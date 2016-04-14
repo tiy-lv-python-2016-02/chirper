@@ -2,10 +2,10 @@
 {% load staticfiles %}
 
 {% block title %}Chirper - {{ chirp.subject }}{% endblock %}
-
-{% block content %}
+{% block javascript %}
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
     <script type="text/javascript">
-        Stripe.setPublishableKey('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
+        Stripe.setPublishableKey('{{ strip_key }}');
         function stripeResponseHandler(status, response) {
             var $form = $('#payment-form');
 
@@ -37,6 +37,10 @@
             });
         });
     </script>
+
+{% endblock %}
+
+{% block content %}
     <h1>Chirp Detail</h1>
     {% if user.is_authenticated %}
         Hello, {{ user.username }}
@@ -79,6 +83,13 @@
             </label>
             <span> / </span>
             <input type="text" size="4" data-stripe="exp-year"/>
+        </div>
+
+        <div class="form-row">
+            <label>
+                <span>Amount: $</span>
+                <input type="text" size="5" name="amount"/>
+            </label>
         </div>
 
         <button type="submit">Submit Payment</button>

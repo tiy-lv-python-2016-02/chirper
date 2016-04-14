@@ -3,6 +3,7 @@ import logging
 import stripe
 from chirps.forms import ChirpForm
 from chirps.models import Chirp
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
@@ -39,6 +40,7 @@ class ChirpDetail(DetailView):
         self.request.session['author_list'] = author_list
 
         context["time_run"] = timezone.now()
+        context["strip_key"] = settings.STRIPE_PUBLISHABLE_KEY
         return context
 
 
@@ -63,16 +65,18 @@ class ChirpUpdate(LoginRequiredMixin, UpdateView):
         return reverse("chirp_detail", args=(self.object.id,))
 
 
-def chirp_donate(self, request):
+def chirp_donate(request):
     token = request.POST["stripeToken"]
 
-    stripe.api_key = "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+
+    amount = int(float(request.POST['amount']) * 100)
     try:
         charge = stripe.Charge.create(
-            amount=1000,  # amount in cents, again
+            amount=amount,  # amount in cents, again
             currency="usd",
             source=token,
-            description="Example charge"
+            description="Donation to chirp"
         )
     except stripe.error.CardError as e:
         # The card has been declined
