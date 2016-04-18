@@ -36,6 +36,15 @@ class Chirp(models.Model):
         super().save(**kwargs)
 
 
+class Pledge(models.Model):
+    user = models.ForeignKey(User, related_name='pledges')
+    chirp = models.ForeignKey(Chirp, related_name='pledges')
+    amount = models.IntegerField()
+    charge_id = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+
 class Tag(models.Model):
     chirps = models.ManyToManyField(Chirp)
     name = models.CharField(max_length=15)
