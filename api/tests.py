@@ -26,6 +26,6 @@ class TestListCreateChirp(APITestCase):
         data = {"subject": "Test Chirp", "message": "Test Chirp Message"}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Chirp.objects.count(), 5) # Migration inserts 3 chirps
+        self.assertEqual(Chirp.objects.count(), 2) 
         self.assertEqual(data["subject"], "Test Chirp")
 
