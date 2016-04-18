@@ -19,13 +19,17 @@ def load_chirps(apps, schema_editor):
 
     """
     Chirp = apps.get_model("chirps", "Chirp")
+    User = apps.get_model("auth", "User")
+    user = User.objects.create_superuser(username="admin",
+                                         password="pass_pass",
+                                         email="admin@admin.com")
 
     with open("fixtures/jeff_chirps.csv") as file:
         reader = csv.reader(file)
         lines = [line for line in reader]
 
     for line in lines:
-        chirp = Chirp(message=line[0], subject=line[1], user_id=1)
+        chirp = Chirp(message=line[0], subject=line[1], user_id=user.id)
         chirp.save()
 
 
