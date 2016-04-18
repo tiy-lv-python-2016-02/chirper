@@ -89,16 +89,6 @@ class ChirpDetailTests(TestCase):
         self.assertEqual(chirp.id, db_chirp.id)
         self.assertTrue("time_run" in response.context)
 
-    def test_chirp_detail_factory(self):
-        factory = RequestFactory()
-        chirp_db = Chirp.objects.first()
-        request = factory.get(reverse("chirp_detail", args=(chirp_db.id,)))
-
-        view = ChirpDetail.as_view()
-        response = view(request, id=chirp_db.id)
-
-        foo = "bar"
-
 
 class ChirpCreateTests(TestCase):
     def setUp(self):
