@@ -28,3 +28,4 @@ deploy:
   app: damp-refuge-62509
   on:
     repo: tiy-lv-python-2016-02/chirper
+  run: 'python manage.py migrate'
