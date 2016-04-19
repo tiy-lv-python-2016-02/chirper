@@ -1,8 +1,10 @@
 import datetime
+import time
 
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from django.utils.functional import cached_property
 from django.utils.text import slugify
 
 
@@ -34,6 +36,11 @@ class Chirp(models.Model):
             self.slug = slugify(self.subject)
 
         super().save(**kwargs)
+
+    #@cached_property
+    def slow_runner(self):
+        time.sleep(5)
+        return "I am running super slow"
 
 
 class Pledge(models.Model):

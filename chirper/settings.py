@@ -55,7 +55,9 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    #'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
+    #'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
@@ -197,3 +199,13 @@ CORS_ALLOW_CREDENTIALS = True
 
 STRIPE_PUBLISHABLE_KEY = os.environ['STRIPE_KEY']
 STRIPE_SECRET_KEY = os.environ['STRIPE_SECRET_KEY']
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+SESSION_ENGINE="django.contrib.sessions.backends.cached_db"
+
+#CACHE_MIDDLEWARE_SECONDS=120
