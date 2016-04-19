@@ -63,7 +63,7 @@ class ChirpListTests(TestCase):
         response = self.client.get(reverse("chirp_list"))
         chirps = response.context["chirp_list"]
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(chirps.count(), 5)
+        self.assertEqual(chirps.count(), 20)
 
 class ChirpDetailTests(TestCase):
 

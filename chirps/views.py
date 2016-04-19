@@ -14,10 +14,10 @@ logger = logging.getLogger(__name__)
 
 class ChirpList(ListView):
     model = Chirp
-    paginate_by = 5
+    paginate_by = 20
 
     def get_queryset(self):
-        qs = Chirp.objects.all()
+        qs = Chirp.objects.select_related().all()
 
         if "user" in self.request.GET:
             qs = qs.filter(user__username=self.request.GET["user"])
@@ -30,6 +30,7 @@ class ChirpList(ListView):
 class ChirpDetail(DetailView):
     model = Chirp
     pk_url_kwarg = 'id'
+    queryset = Chirp.objects.select_related().all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
