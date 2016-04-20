@@ -1,4 +1,5 @@
 {% extends "chirps/base.html" %}
+{% load socialaccount %}
 
 {% block title %}Log In TO Chirper{% endblock %}
 
@@ -10,4 +11,14 @@
         {{ form.as_p }}
         <input type="submit" name="submit" value="Log In!">
     </form>
+
+    <h1>Or Log Into Facebook</h1>
+    <div>
+    <a href="{% provider_login_url "facebook" method="oauth2" %}">Facebook OAuth2</a>
+    </div>
+
+    <h1>Or Log Into Twitter</h1>
+    <div>
+    <a href="{% provider_login_url "twitter" method="oauth1" %}">Twitter OAuth1</a>
+    </div>
 {% endblock %}

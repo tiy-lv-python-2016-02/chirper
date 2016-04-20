@@ -31,6 +31,7 @@ urlpatterns = [
     url(r"^register/$", RegisterUser.as_view(), name="register"),
     url(r"^$", ChirpList.as_view()),
     url(r"^docs/", include('rest_framework_swagger.urls')),
+    url(r'^accounts/', include('allauth.urls')),
     url('^', include('django.contrib.auth.urls'))
 
 
