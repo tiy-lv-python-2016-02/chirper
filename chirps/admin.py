@@ -1,6 +1,9 @@
-from chirps.models import Chirp, Tag
+from chirps.models import Chirp, Tag, Pledge
 from django.contrib import admin
 
+
+class PledgeInline(admin.TabularInline):
+    model = Pledge
 
 @admin.register(Chirp)
 class ChirpAdmin(admin.ModelAdmin):
@@ -21,6 +24,8 @@ class ChirpAdmin(admin.ModelAdmin):
             'fields': ('created_at', 'modified_at')
         })
     )
+
+    inlines = [PledgeInline]
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
