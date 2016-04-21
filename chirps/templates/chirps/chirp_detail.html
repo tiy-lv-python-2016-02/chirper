@@ -51,9 +51,6 @@
         <div class="panel-heading">{{ chirp.subject }}</div>
         <div class="panel-body">
             {{ chirp.message }} <p><small>-by {{ chirp.user }}</small></p>
-{#            {% cache 120 slow_runner chirp.id%}#}
-            {{ chirp.slow_runner }}
-{#            {% endcache %}#}
         </div>
         <div class="panel-footer">{{ chirp.created_at }}</div>
     </div>
