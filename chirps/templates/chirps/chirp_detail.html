@@ -59,7 +59,7 @@
             <img src="{{ chirp.image.url }}" height="{{ chirp.image.height }}" width="{{ chirp.image.width }}">
         </div>
     {% endif %}
-    <form action="{% url "chirp_donate" %}" method="POST" id="payment-form">
+    <form action="{% url "chirps:chirp_donate" %}" method="POST" id="payment-form">
         {% csrf_token %}
         <span class="payment-errors"></span>
 

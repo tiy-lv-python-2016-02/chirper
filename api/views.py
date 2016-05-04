@@ -20,7 +20,7 @@ class DetailUser(generics.RetrieveAPIView):
 
 
 class ListCreateChirp(generics.ListCreateAPIView):
-    queryset = Chirp.objects.order_by("-created_at")
+    queryset = Chirp.objects.all()
     serializer_class = ChirpSerializer
     pagination_class = TenResultsPaginator
     permission_classes = (IsAuthenticatedOrReadOnly,)

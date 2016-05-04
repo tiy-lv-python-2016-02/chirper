@@ -14,7 +14,7 @@
         {% if chirp_list %}
         <div class="list-group">
             {% for chirp in chirp_list %}
-                <a href="{% url 'chirp_detail' chirp.id %}" class="list-group-item">
+                <a href="{% url 'chirps:chirp_detail' chirp.id %}" class="list-group-item">
                 <h4 class="list-group-item-heading">{{ chirp.subject }}</h4>
                 <p class="list-group-item-text">By {{ chirp.user }} at {{ chirp.created_at }}</p>
                 </a>

@@ -22,7 +22,6 @@ class ChirpList(ListView):
         if "user" in self.request.GET:
             qs = qs.filter(user__username=self.request.GET["user"])
 
-        qs = qs.order_by("-created_at")
         logger.debug("ChirpList returned {} chirps".format(qs.count()))
         return qs
 
@@ -48,7 +47,7 @@ class ChirpDetail(DetailView):
 class ChirpCreate(LoginRequiredMixin, CreateView):
     model = Chirp
     form_class = ChirpForm
-    success_url = reverse_lazy("chirp_list")
+    success_url = reverse_lazy("chirps:chirp_list")
     template_name_suffix = "_create"
     # template_name = "chirps/chirp_create.html"
 
@@ -63,7 +62,7 @@ class ChirpUpdate(LoginRequiredMixin, UpdateView):
     template_name = "chirps/chirp_update.html"
 
     def get_success_url(self):
-        return reverse("chirp_detail", args=(self.object.id,))
+        return reverse("chirps:chirp_detail", args=(self.object.id,))
 
 
 def chirp_donate(request):
@@ -83,4 +82,4 @@ def chirp_donate(request):
         # The card has been declined
         pass
 
-    return HttpResponseRedirect(reverse('chirp_list'))
+    return HttpResponseRedirect(reverse('chirps:chirp_list'))

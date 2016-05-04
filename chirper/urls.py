@@ -24,13 +24,14 @@ from users.views import RegisterUser
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^chirps/', include("chirps.urls")),
+    url(r'^chirps/', include("chirps.urls", namespace="chirps")),
     url(r'^logout/$', logout, {'next_page':reverse_lazy('chirp_list')},
         name='logout'),
-    url(r"^api/", include('api.urls')),
+    url(r"^api/", include('api.urls', namespace="api")),
     url(r"^register/$", RegisterUser.as_view(), name="register"),
     url(r"^$", ChirpList.as_view()),
     url(r"^docs/", include('rest_framework_swagger.urls')),
+    url(r'^accounts/', include('allauth.urls')),
     url('^', include('django.contrib.auth.urls'))
 
 

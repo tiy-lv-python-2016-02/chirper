@@ -15,7 +15,7 @@ class Chirp(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True,
                                       verbose_name="Created")
     modified_at = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, related_name="chirps")
+    user = models.ForeignKey(User)
     image = models.ImageField(upload_to="profile/", null=True, blank=True)
     archived = models.BooleanField(default=False)
     slug = models.SlugField(max_length=50, null=True, blank=True)
@@ -43,6 +43,16 @@ class Chirp(models.Model):
         return "I slept for {} seconds for id {}".format(5, self.id)
 
 
+    class Meta:
+        ordering = ["-created_at", "id"]
+        default_related_name = "chirps"
+        get_latest_by = "created_at"
+        verbose_name = "chirp"
+        verbose_name_plural = "chirps"
+        # index_together = [["user", "subject"]]
+        # unique_together = (("city", "state"),)
+
+
 class Pledge(models.Model):
     user = models.ForeignKey(User, related_name='pledges')
     chirp = models.ForeignKey(Chirp, related_name='pledges')
@@ -60,18 +70,18 @@ class Tag(models.Model):
     def __str__(self):
         return "Name: {} Posted At: {}".format(self.name, self.created_at)
 
-# class Favorite(models.Model):
-#     FUNNY = "F"
-#     INTERESTING = "I"
-#     SAD = "S"
-#     NO_REASON = "NR"
-#     reasons = (
-#         (FUNNY, 'Funny'),
-#         (INTERESTING, "Interesting"),
-#         (SAD, "Sad"),
-#         (NO_REASON, "No Reason")
-#     )
+
+# class HashTag(models.Model):
+#     text = models.CharField(max_length=10)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     modified_at = models.DateTimeField(auto_now=True)
 #
+#     class Meta:
+#         abstract = True
+#
+#
+# class UserHashTag(HashTag):
 #     user = models.ForeignKey(User)
+#
+# class ChirpHashTag(HashTag):
 #     chirp = models.ForeignKey(Chirp)
-#     why = models.CharField(max_length=3, choices=reasons, default=NO_REASON)

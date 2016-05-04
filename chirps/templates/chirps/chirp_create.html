@@ -3,7 +3,7 @@
 
 {% block content %}
     <h1>Create Chirp</h1>
-    <form method="post" action="{% url "chirp_create" %}" class="form">
+    <form method="post" action="{% url "chirps:chirp_create" %}" class="form">
         {% csrf_token %}
         {% bootstrap_form form %}
         {% buttons submit="Chirp!" %}{% endbuttons %}
